@@ -8,13 +8,22 @@ public class WaveSpawner : MonoBehaviour
     public WaveData[] waves;
     public int curWave = 0;
 
-    private int remainingEnemies;
+    public int remainingEnemies;
 
     [Header("Components")] 
     public Transform enemySpawnPos;
     public TextMeshProUGUI waveText;
     public GameObject nextWaveButton;
 
+    void OnEnable ()
+    {
+        Enemy.OnDestroyed += OnEnemyDestroyed;
+    }
+    void OnDisable ()
+    {
+        Enemy.OnDestroyed -= OnEnemyDestroyed;
+    }
+    
     public void SpawnNextWave ()
     {
         curWave++;

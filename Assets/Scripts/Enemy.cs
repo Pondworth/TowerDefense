@@ -17,11 +17,17 @@ public class Enemy : MonoBehaviour
     private int curPathWaypoint;
 
     public GameObject healthBarPrefab;
-
-    //public static event UnityAction OnDestroyed;
+    
+    public static event UnityAction OnDestroyed;
+    
     void Start()
     {
         path = GameManager.instance.enemyPath.waypoints;
+        
+        //create the health bar
+        Canvas canvas = FindObjectOfType<Canvas>();
+        GameObject healthBar = Instantiate(healthBarPrefab, canvas.transform);
+        healthBar.GetComponent<EnemyHealthBar>().Initialize(this);
     }
     void Update ()
     {
@@ -41,8 +47,7 @@ public class Enemy : MonoBehaviour
         else
         {
             GameManager.instance.TakeDamage(damageToPlayer);
-            GameManager.instance.onEnemyDestroyed.Invoke();
-            //OnDestroyed.Invoke();
+            OnDestroyed.Invoke();
             Destroy((gameObject));
         }
     }
@@ -54,7 +59,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             GameManager.instance.AddMoney(moneyOnDeath);
-            GameManager.instance.onEnemyDestroyed.Invoke();
+            OnDestroyed.Invoke();
             Destroy(gameObject);
         }
     }
